@@ -130,6 +130,7 @@ You should first make sure that all of the requirements are met. You can install
 
 issues with 
 oauthlib
+```sudo apt-get install python-oauthlib```
 requests
 requests_oauthlib
 
