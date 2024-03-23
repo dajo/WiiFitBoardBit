@@ -21,7 +21,7 @@ class FitBitOAuth2UserClient:
     access_token_url = request_token_url
     refresh_token_url = request_token_url
 
-    redirect_url = "https://127.0.0.1/fitbit_auth_redirect"
+    redirect_url = "https://192.168.1.89/fitbit_auth_redirect"
     client_id = FITBIT_CLIENT_ID
     client_secret = FITBIT_CLIENT_SECRET
 
