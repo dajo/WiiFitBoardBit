@@ -1,3 +1,7 @@
+wheel==0.37.1
+setuptools==45.0.0
+pycairo==1.18.2
+#original
 six==1.16.0
 numpy==1.16.6
 dbus-python==1.2.18
