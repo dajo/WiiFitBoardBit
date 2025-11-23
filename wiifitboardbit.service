@@ -1,0 +1,23 @@
+[Unit]
+Description=WiiFitBoardBit - Wii Balance Board to Fitbit Scale
+After=network.target bluetooth.target
+Wants=bluetooth.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/home/pi/WiiFitBoardBit
+Environment="LD_LIBRARY_PATH=/usr/lib:/usr/local/lib"
+Environment="PYTHONPATH=/usr/lib/python2.7/site-packages:/usr/local/lib/python2.7/site-packages"
+ExecStart=/usr/bin/python2 /home/pi/WiiFitBoardBit/main.py
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+
+# Security settings
+PrivateTmp=yes
+NoNewPrivileges=false
+
+[Install]
+WantedBy=multi-user.target
