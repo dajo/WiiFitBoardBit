@@ -34,15 +34,18 @@ if ! command -v apt-get &> /dev/null; then
     exit 1
 fi
 
+# Detect OS version
+print_info "Detecting OS version..."
+OS_VERSION=$(grep VERSION_CODENAME /etc/os-release | cut -d'=' -f2)
+print_info "Detected: Debian/Raspbian $OS_VERSION"
+
 # Update package list
 print_info "Updating package list..."
 sudo apt-get update
 
-# Install base dependencies
-print_info "Installing base dependencies (Python 2, Bluez, build tools)..."
+# Install base dependencies (non-Python packages first)
+print_info "Installing base dependencies (Bluez, build tools)..."
 sudo apt-get install -y \
-    python2 \
-    python-pip \
     bluez \
     build-essential \
     git \
@@ -51,14 +54,56 @@ sudo apt-get install -y \
     libudev-dev \
     libncurses5-dev \
     swig \
-    python-dev \
-    python-numpy \
     libcairo2-dev \
     libgirepository1.0-dev \
     libssl-dev \
     libdbus-glib-1-dev \
+    curl
+
+# Install Python 2.7 (handling different OS versions)
+print_info "Installing Python 2.7..."
+
+if [[ "$OS_VERSION" == "bookworm" ]] || [[ "$OS_VERSION" == "bullseye" ]]; then
+    print_warning "Newer OS detected - Python 2 not in default repos, installing from available packages..."
+
+    # Try to install python2.7 and related packages
+    sudo apt-get install -y python2.7 python2.7-dev || {
+        print_error "Python 2.7 not available in repositories."
+        print_info "Attempting to install from deadsnakes or alternative source..."
+
+        # For newer systems, we may need to compile or use alternative repos
+        print_warning "You may need to compile Python 2.7 from source or your system may already have it."
+    }
+
+    # Create python2 symlink if it doesn't exist
+    if ! command -v python2 &> /dev/null && command -v python2.7 &> /dev/null; then
+        print_info "Creating python2 symlink..."
+        sudo ln -sf /usr/bin/python2.7 /usr/bin/python2
+    fi
+
+    # Install pip2 manually if not available
+    if ! command -v pip2 &> /dev/null; then
+        print_info "Installing pip2 manually..."
+        curl https://bootstrap.pypa.io/pip/2.7/get-pip.py -o /tmp/get-pip.py
+        sudo python2.7 /tmp/get-pip.py
+        rm /tmp/get-pip.py
+    fi
+
+else
+    # Older OS versions (Buster and earlier) have Python 2 in repos
+    print_info "Installing Python 2 from repositories..."
+    sudo apt-get install -y \
+        python2 \
+        python-pip \
+        python-dev
+fi
+
+# Install Python 2 system packages that are available
+print_info "Installing available Python 2 system packages..."
+sudo apt-get install -y \
     python-dbus \
-    python-oauthlib
+    python-numpy \
+    python3-numpy || print_warning "Some Python packages not available, will install via pip later"
 
 # Create directory for building XWiimote
 BUILD_DIR="/tmp/wiimote_build"
@@ -114,10 +159,23 @@ cd - > /dev/null
 
 # Install Python dependencies
 print_info "Installing Python dependencies from requirements.txt..."
-pip2 install --user -r requirements.txt || {
-    print_warning "Some pip packages failed, trying with sudo..."
-    sudo pip2 install -r requirements.txt
-}
+
+# First try to install dbus-python if not available as system package
+if ! python2 -c "import dbus" &> /dev/null; then
+    print_info "Installing dbus-python via pip..."
+    sudo pip2 install dbus-python || print_warning "dbus-python installation failed, may need system package"
+fi
+
+# Install other requirements
+if command -v pip2 &> /dev/null; then
+    pip2 install --user -r requirements.txt || {
+        print_warning "Some pip packages failed, trying with sudo..."
+        sudo pip2 install -r requirements.txt || print_warning "Some packages may have failed to install"
+    }
+else
+    print_error "pip2 not found! Cannot install Python dependencies."
+    print_info "Please install pip2 manually and run: pip2 install -r requirements.txt"
+fi
 
 # Create data directory if it doesn't exist
 if [ ! -d "data" ]; then
