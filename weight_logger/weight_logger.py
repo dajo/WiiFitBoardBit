@@ -27,7 +27,8 @@ def format_weight(weight):
 
 
 base_file = os.path.abspath(getsourcefile(lambda: 0))
-base_file_location = base_file[:len(base_file)-7]
+# Get the project root directory (parent of weight_logger directory)
+base_file_location = os.path.dirname(os.path.dirname(base_file))
 
 
 class WeightLogger:
