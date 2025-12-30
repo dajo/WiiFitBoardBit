@@ -46,13 +46,15 @@ exit
 
 ## Step 3: Run the Program
 
+Use the helper script (sets environment variables automatically):
+
 ```bash
-sudo python2 main.py
+./run.sh
 ```
 
-If you get library errors, try:
+Or run manually:
 ```bash
-sudo LD_LIBRARY_PATH=/usr/lib PYTHONPATH=/usr/lib/python2.7/site-packages python2 main.py
+sudo PYTHONPATH=/usr/lib/python2.7/site-packages python2 main.py
 ```
 
 ---
