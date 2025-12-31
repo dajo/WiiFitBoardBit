@@ -10,13 +10,21 @@ from datetime import datetime, timedelta
 
 from config import DATETIME_FORMAT
 
-user_data_file_location = '/fitbit_sync/auth_data/'
+# Relative path from project root to auth_data directory
+user_data_file_location = 'fitbit_sync/auth_data/'
 
 
 def get_user_file_location(user_id):
     base_file = os.path.abspath(getsourcefile(lambda: 0))
-    base_file_location = base_file[:len(base_file) - 7]
-    return os_path.join(base_file_location, user_data_file_location, 'user_{}.json'.format(user_id))
+    # Get project root directory (parent of fitbit_sync directory)
+    base_file_location = os.path.dirname(os.path.dirname(base_file))
+    auth_data_dir = os_path.join(base_file_location, user_data_file_location)
+
+    # Create auth_data directory if it doesn't exist
+    if not os_path.exists(auth_data_dir):
+        os.makedirs(auth_data_dir)
+
+    return os_path.join(auth_data_dir, 'user_{}.json'.format(user_id))
 
 # General class to read/write user data from json file
 
