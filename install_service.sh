@@ -1,5 +1,5 @@
 #!/bin/bash
-# Install WiiFitBoardBit as a systemd service
+# Install WiiFitBoardBit as a systemd service for automatic startup
 
 set -e
 
@@ -7,7 +7,10 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 SERVICE_FILE="wiifitboardbit.service"
 SERVICE_NAME="wiifitboardbit.service"
 
-echo "Installing WiiFitBoardBit systemd service..."
+echo "=========================================="
+echo "WiiFitBoardBit Service Installer"
+echo "=========================================="
+echo ""
 
 # Check if running as root
 if [ "$EUID" -ne 0 ]; then
@@ -15,23 +18,29 @@ if [ "$EUID" -ne 0 ]; then
     exit 1
 fi
 
-# Update WorkingDirectory in service file to current directory
-sed -i "s|WorkingDirectory=.*|WorkingDirectory=$SCRIPT_DIR|g" "$SERVICE_FILE"
-sed -i "s|ExecStart=.*|ExecStart=/usr/bin/python2 $SCRIPT_DIR/main.py|g" "$SERVICE_FILE"
+# Check if service file exists
+if [ ! -f "$SERVICE_FILE" ]; then
+    echo "Error: Service file not found: $SERVICE_FILE"
+    exit 1
+fi
 
-# Copy service file
-echo "Copying service file to /etc/systemd/system/..."
+echo "Installing WiiFitBoardBit as a system service..."
+echo ""
+
+# Copy service file to systemd directory
+echo "1. Copying service file to /etc/systemd/system/..."
 cp "$SERVICE_FILE" "/etc/systemd/system/$SERVICE_NAME"
 
 # Reload systemd
-echo "Reloading systemd daemon..."
+echo "2. Reloading systemd daemon..."
 systemctl daemon-reload
 
-# Enable service
-echo "Enabling service to start on boot..."
+# Enable the service to start on boot
+echo "3. Enabling service to start on boot..."
 systemctl enable "$SERVICE_NAME"
 
 # Ask if user wants to start now
+echo ""
 read -p "Do you want to start the service now? (y/n) " -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
@@ -44,12 +53,17 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
 fi
 
 echo ""
-echo "Installation complete!"
+echo "=========================================="
+echo "Installation Complete!"
+echo "=========================================="
+echo ""
+echo "The WiiFitBoardBit service will start automatically on boot."
 echo ""
 echo "Useful commands:"
-echo "  Start service:   sudo systemctl start $SERVICE_NAME"
-echo "  Stop service:    sudo systemctl stop $SERVICE_NAME"
-echo "  Restart service: sudo systemctl restart $SERVICE_NAME"
-echo "  View status:     sudo systemctl status $SERVICE_NAME"
-echo "  View logs:       sudo journalctl -u $SERVICE_NAME -f"
-echo "  Disable service: sudo systemctl disable $SERVICE_NAME"
+echo "  sudo systemctl status wiifitboardbit    # Check service status"
+echo "  sudo systemctl stop wiifitboardbit      # Stop the service"
+echo "  sudo systemctl start wiifitboardbit     # Start the service"
+echo "  sudo systemctl restart wiifitboardbit   # Restart the service"
+echo "  tail -f $SCRIPT_DIR/log.txt             # View live logs"
+echo "  sudo systemctl disable wiifitboardbit   # Disable auto-start"
+echo ""

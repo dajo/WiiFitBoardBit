@@ -6,14 +6,15 @@ Wants=bluetooth.target
 [Service]
 Type=simple
 User=root
-WorkingDirectory=/home/pi/WiiFitBoardBit
+WorkingDirectory=/home/jason/git/WiiFitBoardBit
 Environment="LD_LIBRARY_PATH=/usr/lib:/usr/local/lib"
 Environment="PYTHONPATH=/usr/lib/python2.7/site-packages:/usr/local/lib/python2.7/site-packages"
-ExecStart=/usr/bin/python2 /home/pi/WiiFitBoardBit/main.py
+Environment="PYTHONWARNINGS=ignore::Warning"
+ExecStart=/usr/bin/python2 /home/jason/git/WiiFitBoardBit/main.py
 Restart=always
 RestartSec=10
-StandardOutput=journal
-StandardError=journal
+StandardOutput=append:/home/jason/git/WiiFitBoardBit/log.txt
+StandardError=append:/home/jason/git/WiiFitBoardBit/log.txt
 
 # Security settings
 PrivateTmp=yes
