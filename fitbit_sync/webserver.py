@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
+import os
 
 from flask import Flask, redirect, render_template, request
 from flask_bootstrap import Bootstrap
@@ -72,7 +73,20 @@ def successfully_authorised():
 def main():
     logging.info("Starting FitBit Authentication web server (FBAS)")
     if FITBIT_SYNC_ENABLED:  # No point in running this server if FitBit sync is not enabled
-        app.run(port=8080, host="0.0.0.0")
+        # Get the directory where this file is located
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        cert_file = os.path.join(script_dir, 'cert.pem')
+        key_file = os.path.join(script_dir, 'key.pem')
+
+        # Check if SSL certificate files exist
+        if os.path.exists(cert_file) and os.path.exists(key_file):
+            logging.info("[FBAS] Using SSL certificate for HTTPS")
+            ssl_context = (cert_file, key_file)
+            app.run(port=8080, host="0.0.0.0", ssl_context=ssl_context)
+        else:
+            logging.warning("[FBAS] SSL certificate not found. Run ./generate_ssl_cert.sh first!")
+            logging.warning("[FBAS] Starting without SSL (Fitbit OAuth will not work)")
+            app.run(port=8080, host="0.0.0.0")
 
 
 if __name__ == "__main__":
