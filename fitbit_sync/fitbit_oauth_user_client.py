@@ -114,7 +114,7 @@ class FitBitOAuth2UserClient:
         """
         Sends a POST request to FitBit to log user weight for the specified date
         @type weight: float
-        @param weight: weight to log
+        @param weight: weight to log (always in kg from the Balance Board)
         @type date: datetime.datetime
         @param date: datetime object for which to store the date
         """
@@ -127,8 +127,14 @@ class FitBitOAuth2UserClient:
 
         url = '{}/{}/user/-/body/log/weight.json'.format(self.API_ENDPOINT, self.API_VERSION)
 
+        # Convert weight from kg to lbs if needed
+        # Note: Balance Board always outputs in kg, so weight parameter is always in kg
+        weight_to_log = weight
+        if UNITS == 'IMPERIAL':
+            weight_to_log = weight * 2.20462  # Convert kg to lbs
+
         data = {
-            'weight': weight,
+            'weight': weight_to_log,
             'date': date.strftime('%Y-%m-%d'),
             'time': date.strftime('%H:%M:%S'),
         }
