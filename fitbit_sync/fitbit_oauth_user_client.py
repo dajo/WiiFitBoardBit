@@ -75,10 +75,8 @@ class FitBitOAuth2UserClient:
         """ Fetches FitBit OAuth2 refresh token and stores it """
         self.session.fetch_token(
             self.access_token_url,
-            username=self.client_id,
-            password=self.client_secret,
-            client_secret=self.client_secret,
-            code=code)
+            code=code,
+            auth=HTTPBasicAuth(self.client_id, self.client_secret))
         self.do_refresh_token()
         return
 
