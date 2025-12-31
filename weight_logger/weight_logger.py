@@ -125,9 +125,14 @@ class WeightLogger:
         })
 
     def determine_user_id_by_weight(self, weight):
+        # Convert fluctuation to display units for logging
+        fluctuation_display = ALLOWED_WEIGHT_FLUCTUATION_KG
+        if UNITS == 'IMPERIAL':
+            fluctuation_display = ALLOWED_WEIGHT_FLUCTUATION_KG * 2.20462
+
         logging.info(
             "[WL] Searching user by weight (allowed fluctuation {:.2f} {}.)".format(
-                ALLOWED_WEIGHT_FLUCTUATION_KG, WEIGHT_UNITS
+                fluctuation_display, WEIGHT_UNITS
             )
         )
         latest_weight_by_user = self.get_latest_weights_by_user()

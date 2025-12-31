@@ -49,22 +49,25 @@ WEIGHT_SYNC_LOOP_TIME_SECS = 30
 
 
 # ================================================= Weight Fluctuation =================================================
-# The following value is used to determine which weight belongs to which user. If the difference between the closest
-# weight logged to the current weight logged (when data exists) exceeds this amount, the weight will be assigned to a
-# new user. Lower values might cause issues when measuring weight inbetween long periods of time. This system might not
-# work for multiple users that weight a very similar amount.
+# The following value is used to determine which weight belongs to which user. New weights are compared against each
+# user's MOST RECENT weight (not their first weight). If the difference exceeds this amount, a new user is created.
 #
-# For example:
-# - User 1 weights 100 kg and is logged in the data file.
-# - User 2 weights 60 kg and is logged in the data file.
+# IMPORTANT: This is always in KG regardless of UNITS setting. (10 kg ≈ 22 lbs)
 #
-# - A new weight value is registered of 98.9 kg. Since the smallest difference between weights is 1.1kg (which is
-#   within the default allowed weight fluctuation), the new weight is assigned to User 1.
-# - A new weight value is registered of 81 kg. Since the difference between last registered user weights
-#   (60kg [diff 21 kg] and 98.9 kg [diff 17.9 kg.]) exceeds the default allowed weight fluctuation of 10kg - a new user
-#   is created
+# NOTE: You can lose/gain more than this amount over time! Each measurement is only compared to your PREVIOUS weight.
+# For example, if you start at 100 kg and lose 1 kg per week, all measurements will be assigned to the same user
+# because each new weight is within 10 kg of the previous one.
 #
-ALLOWED_WEIGHT_FLUCTUATION_KG = 10.0
+# Example with multiple users:
+# - User 1's latest weight: 100 kg
+# - User 2's latest weight: 60 kg
+# - New measurement: 98.9 kg → difference from User 1 is 1.1 kg (within 10 kg) → assigned to User 1
+# - New measurement: 81 kg → difference from User 1 is 17.1 kg, from User 2 is 21 kg → both exceed 10 kg → new User 3
+#
+# Lower values might cause issues when measuring weight between long periods of time. This system might not work well
+# for multiple users with very similar weights.
+#
+ALLOWED_WEIGHT_FLUCTUATION_KG = 10.0  # Always in KG (≈ 22 lbs)
 # ======================================================================================================================
 
 
