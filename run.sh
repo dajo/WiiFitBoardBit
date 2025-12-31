@@ -9,9 +9,12 @@ cd "$SCRIPT_DIR"
 export PYTHONPATH=/usr/lib/python2.7/site-packages:/usr/local/lib/python2.7/site-packages
 export LD_LIBRARY_PATH=/usr/lib:/usr/local/lib
 
+# Suppress Flask development server warning (this is a personal project, dev server is fine)
+export PYTHONWARNINGS="ignore::Warning"
+
 echo "Starting WiiFitBoardBit..."
 echo "Press Ctrl+C to stop"
 echo ""
 
 # Run with sudo to access Bluetooth
-sudo -E PYTHONPATH="$PYTHONPATH" LD_LIBRARY_PATH="$LD_LIBRARY_PATH" python2 main.py
+sudo -E PYTHONPATH="$PYTHONPATH" LD_LIBRARY_PATH="$LD_LIBRARY_PATH" PYTHONWARNINGS="$PYTHONWARNINGS" python2 main.py
