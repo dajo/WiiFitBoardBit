@@ -6,7 +6,7 @@ import urllib
 from requests.auth import HTTPBasicAuth
 from requests_oauthlib import OAuth2Session
 
-from config import FITBIT_SYNC_ENABLED, FITBIT_CLIENT_ID, FITBIT_CLIENT_SECRET, UNITS
+from config import FITBIT_SYNC_ENABLED, FITBIT_CLIENT_ID, FITBIT_CLIENT_SECRET, FITBIT_REDIRECT_URL, UNITS
 from fitbit_sync.user import FitBitUser
 from fitbit_sync.utils.compliance import fitbit_compliance_fix
 
@@ -21,7 +21,7 @@ class FitBitOAuth2UserClient:
     access_token_url = request_token_url
     refresh_token_url = request_token_url
 
-    redirect_url = "https://192.168.1.89/fitbit_auth_redirect"
+    redirect_url = FITBIT_REDIRECT_URL
     client_id = FITBIT_CLIENT_ID
     client_secret = FITBIT_CLIENT_SECRET
 

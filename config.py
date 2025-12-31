@@ -23,6 +23,11 @@ FITBIT_SYNC_ENABLED = False
 FITBIT_CLIENT_ID = None
 FITBIT_CLIENT_SECRET = None
 
+# Fitbit OAuth redirect URL - should match what you set in your Fitbit app settings
+# Format: https://YOUR_PI_IP:8080/fitbit_auth_redirect
+# Example: https://192.168.1.237:8080/fitbit_auth_redirect
+FITBIT_REDIRECT_URL = None  # Set this to your Pi's IP address with https and port 8080
+
 # Try to import credentials from fitbit_credentials.py (not tracked by git)
 try:
     from fitbit_credentials import FITBIT_CLIENT_ID as _CLIENT_ID, FITBIT_CLIENT_SECRET as _CLIENT_SECRET
@@ -30,6 +35,13 @@ try:
     FITBIT_CLIENT_SECRET = _CLIENT_SECRET
 except ImportError:
     pass  # Use values set above (None by default)
+
+# Try to import redirect URL from fitbit_credentials.py as well
+try:
+    from fitbit_credentials import FITBIT_REDIRECT_URL as _REDIRECT_URL
+    FITBIT_REDIRECT_URL = _REDIRECT_URL
+except ImportError:
+    pass  # Use value set above (None by default)
 
 # How often to attempt weight logging on FitBit
 WEIGHT_SYNC_LOOP_TIME_SECS = 30
