@@ -6,9 +6,8 @@
 # security of this project folder.
 FITBIT_SYNC_ENABLED = False
 
-# Set up a new app for yourself at https://dev.fitbit.com/apps and fill the values bellow. For redirect URL you can
-# set the local IP of the device you'll be running this on (http://192.168.XXX.XXX:8080/fitbit_auth_redirect)
-
+# Set up a new app for yourself at https://dev.fitbit.com/apps
+#
 # To set up your application go to https://dev.fitbit.com/apps
 # Application Website URL: Use your GitHub account or something else
 # Organization: Can enter 'N/A'
@@ -16,10 +15,21 @@ FITBIT_SYNC_ENABLED = False
 # Terms of Service URL: Link to FitBit ToS
 # Privacy Policy URL: Link to FitBit Privacy Policy URL
 # OAuth 2.0 Application Type: Personal
-# Redirect URL: http://127.0.0.1:8080/fitbit_auth_redirect (recommended)
+# Redirect URL: https://YOUR_PI_IP:8080/fitbit_auth_redirect (e.g. https://192.168.1.237:8080/fitbit_auth_redirect)
 # Default Access Type: Read and Write
+#
+# RECOMMENDED: Create a file called 'fitbit_credentials.py' with your credentials (see fitbit_credentials.py.example)
+# This keeps your credentials out of git. Otherwise, set them here:
 FITBIT_CLIENT_ID = None
 FITBIT_CLIENT_SECRET = None
+
+# Try to import credentials from fitbit_credentials.py (not tracked by git)
+try:
+    from fitbit_credentials import FITBIT_CLIENT_ID as _CLIENT_ID, FITBIT_CLIENT_SECRET as _CLIENT_SECRET
+    FITBIT_CLIENT_ID = _CLIENT_ID
+    FITBIT_CLIENT_SECRET = _CLIENT_SECRET
+except ImportError:
+    pass  # Use values set above (None by default)
 
 # How often to attempt weight logging on FitBit
 WEIGHT_SYNC_LOOP_TIME_SECS = 30
