@@ -8,7 +8,7 @@ Type=simple
 User=root
 WorkingDirectory=/home/jason/git/WiiFitBoardBit
 Environment="LD_LIBRARY_PATH=/usr/lib:/usr/local/lib"
-Environment="PYTHONPATH=/usr/lib/python2.7/site-packages:/usr/local/lib/python2.7/site-packages"
+Environment="PYTHONPATH=/home/jason/.local/lib/python2.7/site-packages:/usr/lib/python2.7/site-packages:/usr/local/lib/python2.7/site-packages"
 Environment="PYTHONWARNINGS=ignore::Warning"
 ExecStart=/usr/bin/python2 /home/jason/git/WiiFitBoardBit/main.py
 Restart=always
