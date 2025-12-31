@@ -155,6 +155,14 @@ def connect_balance_board():
     err /= 100.0
     weight, err, units = convert_measurements_to_units(kg, err)
 
+    # Validate weight - reject zero or very small values (likely measurement errors)
+    MIN_VALID_WEIGHT_KG = 20.0  # Minimum ~44 lbs - anything less is invalid
+    if kg < MIN_VALID_WEIGHT_KG:
+        logging.warning("[BBTT] Invalid weight reading: {:.2f}{}. Measurement discarded (minimum: {:.2f}kg).".format(
+            weight, units, MIN_VALID_WEIGHT_KG))
+        logging.info("[BBTT] Weight measurement failed or user stepped off too quickly. Please try again.")
+        return
+
     # Log the weight and inform that the weight has been logged.
     logging.info("[BBTT] Weight registered: {:.2f}{}. +/- {:.2f}{}.".format(weight, units, err, units))
     logging.info("[BBTT] Attempting to log weight")

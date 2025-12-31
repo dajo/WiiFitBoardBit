@@ -109,6 +109,13 @@ class WeightLogger:
         weight_log.close()
 
     def log_weight(self, weight):
+        # Validate weight - reject zero or very small values
+        MIN_VALID_WEIGHT_KG = 20.0  # Minimum ~44 lbs
+        if weight < MIN_VALID_WEIGHT_KG:
+            logging.warning("[WL] Invalid weight {:.2f} kg rejected (minimum: {:.2f} kg). Not logging.".format(
+                weight, MIN_VALID_WEIGHT_KG))
+            return
+
         logging.info("Weight logging for weight {:.2f}, started (WL)".format(weight))
         self._create_single_weight_log_entry({
             'user_id': self.determine_user_id_by_weight(weight),
