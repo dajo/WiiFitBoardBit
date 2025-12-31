@@ -25,18 +25,36 @@ if [ ! -f "$SERVICE_FILE" ]; then
 fi
 
 echo "Installing WiiFitBoardBit as a system service..."
+echo "Installation directory: $SCRIPT_DIR"
 echo ""
 
-# Copy service file to systemd directory
-echo "1. Copying service file to /etc/systemd/system/..."
-cp "$SERVICE_FILE" "/etc/systemd/system/$SERVICE_NAME"
+# Get the current user who invoked sudo (for finding their site-packages)
+ACTUAL_USER="${SUDO_USER:-$USER}"
+USER_HOME=$(eval echo ~$ACTUAL_USER)
+USER_SITE_PACKAGES="$USER_HOME/.local/lib/python2.7/site-packages"
+
+echo "Detected user: $ACTUAL_USER"
+echo "User home: $USER_HOME"
+echo ""
+
+# Create a temporary service file with the correct paths
+echo "1. Generating service file with correct paths..."
+TEMP_SERVICE=$(mktemp)
+sed -e "s|/path/to/WiiFitBoardBit|$SCRIPT_DIR|g" \
+    -e "s|/home/user/\.local/lib/python2\.7/site-packages|$USER_SITE_PACKAGES|g" \
+    "$SERVICE_FILE" > "$TEMP_SERVICE"
+
+# Copy the customized service file to systemd directory
+echo "2. Copying service file to /etc/systemd/system/..."
+cp "$TEMP_SERVICE" "/etc/systemd/system/$SERVICE_NAME"
+rm "$TEMP_SERVICE"
 
 # Reload systemd
-echo "2. Reloading systemd daemon..."
+echo "3. Reloading systemd daemon..."
 systemctl daemon-reload
 
 # Enable the service to start on boot
-echo "3. Enabling service to start on boot..."
+echo "4. Enabling service to start on boot..."
 systemctl enable "$SERVICE_NAME"
 
 # Ask if user wants to start now

@@ -19,7 +19,27 @@ To run ```wiifitboardbit```, the following is required:
 - [XWiimote-bindings](https://github.com/dvdhrm/xwiimote-bindings) XWiimote library bindings.
 
 
-## Setup
+## Quick Start (Raspberry Pi)
+
+For Raspberry Pi users, there's an automated setup script that handles everything:
+
+```bash
+git clone https://github.com/yourusername/WiiFitBoardBit.git
+cd WiiFitBoardBit
+chmod +x setup_raspberry_pi.sh
+./setup_raspberry_pi.sh
+```
+
+This will automatically:
+- Install Python 2.7 and all dependencies
+- Install XWiimote driver and bindings
+- Set up the project for use
+
+For headless/automatic operation (runs as a background service), see [HEADLESS_SETUP.md](HEADLESS_SETUP.md).
+
+For detailed setup instructions and troubleshooting, see [SETUP_GUIDE.md](SETUP_GUIDE.md).
+
+## Manual Setup
 
 Start of with installing Python 2 and Bluez 5 if you don't have it:
 ```

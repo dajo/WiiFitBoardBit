@@ -4,13 +4,19 @@ This guide will help you set up WiiFitBoardBit as a background service that runs
 
 ## Quick Setup
 
-1. **Install the service:**
+1. **Navigate to your WiiFitBoardBit directory:**
    ```bash
-   cd ~/git/WiiFitBoardBit
+   cd /path/to/WiiFitBoardBit
+   ```
+
+2. **Install the service:**
+   ```bash
    sudo ./install_service.sh
    ```
 
-2. **That's it!** The service is now running and will start automatically on boot.
+3. **That's it!** The service is now running and will start automatically on boot.
+
+The installer will automatically detect your installation directory and user, and configure the service with the correct paths.
 
 ## Managing the Service
 
@@ -29,14 +35,16 @@ sudo systemctl restart wiifitboardbit # Restart the service
 ### View Logs
 ```bash
 # View live logs (follow mode)
-tail -f ~/git/WiiFitBoardBit/log.txt
+tail -f /path/to/WiiFitBoardBit/log.txt
 
 # View last 50 lines
-tail -n 50 ~/git/WiiFitBoardBit/log.txt
+tail -n 50 /path/to/WiiFitBoardBit/log.txt
 
 # View all logs
-cat ~/git/WiiFitBoardBit/log.txt
+cat /path/to/WiiFitBoardBit/log.txt
 ```
+
+**Note:** Replace `/path/to/WiiFitBoardBit` with your actual installation directory (e.g., `~/git/WiiFitBoardBit`).
 
 ### Disable Auto-Start
 If you want to stop the service from starting automatically on boot:
@@ -63,8 +71,8 @@ The systemd service:
 When you pull new changes from git:
 
 ```bash
-cd ~/git/WiiFitBoardBit
-git pull origin claude/setup-raspberry-pi-01AyJRn7S2oKfy4tJ2zZjN2Y
+cd /path/to/WiiFitBoardBit
+git pull
 
 # Restart the service to apply changes
 sudo systemctl restart wiifitboardbit
@@ -80,7 +88,7 @@ sudo systemctl status wiifitboardbit -l --no-pager
 
 Check the logs:
 ```bash
-tail -n 100 ~/git/WiiFitBoardBit/log.txt
+tail -n 100 /path/to/WiiFitBoardBit/log.txt
 ```
 
 ### Service keeps restarting
@@ -105,7 +113,7 @@ Before relying on the service, test that everything works:
 
 2. **Run manually to verify:**
    ```bash
-   cd ~/git/WiiFitBoardBit
+   cd /path/to/WiiFitBoardBit
    ./run.sh
    ```
 
