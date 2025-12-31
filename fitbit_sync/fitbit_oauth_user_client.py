@@ -55,7 +55,7 @@ class FitBitOAuth2UserClient:
             return False
         session = fitbit_compliance_fix(OAuth2Session(
             self.client_id,
-            redirect_uri='{}/{}'.format(self.redirect_url, self.user_id),
+            redirect_uri=self.redirect_url,
             token_updater=self.do_store_token,
             scope=self.scope,
         ))
@@ -106,6 +106,7 @@ class FitBitOAuth2UserClient:
             'scope': self.scope,
             'client_id': self.client_id,
             'response_type': 'code',
+            'redirect_uri': self.redirect_url,
             'state': self.user.generate_new_user_csrf_token(),
         }
         url = '{}?{}'.format(self.authorization_url, urllib.urlencode(url_data))
