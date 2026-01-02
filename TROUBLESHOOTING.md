@@ -493,6 +493,58 @@ For multiple users with similar weights, consider:
 
 ---
 
+### Need to re-authorize after every restart
+
+**Symptoms:**
+- Must visit http://YOUR_PI_IP:8080/ and authorize after every reboot
+- "Please check user authentication" errors after restart
+- Weight logs but doesn't sync to Fitbit
+
+**Cause:** OAuth tokens aren't being saved/loaded properly. This is usually a file permissions issue.
+
+**Diagnostic:**
+
+1. **Check if token files exist:**
+   ```bash
+   cd /path/to/WiiFitBoardBit
+   ./check_fitbit_tokens.sh
+   ```
+
+2. **Check permissions:**
+   ```bash
+   ls -la fitbit_sync/auth_data/
+   ```
+
+**Solutions:**
+
+1. **Fix permissions** (if files exist but aren't readable):
+   ```bash
+   cd /path/to/WiiFitBoardBit
+   sudo chown -R $USER:$USER fitbit_sync/auth_data/
+   chmod -R 755 fitbit_sync/auth_data/
+   ```
+
+2. **Ensure directory persists** (create if missing):
+   ```bash
+   mkdir -p fitbit_sync/auth_data
+   chmod 755 fitbit_sync/auth_data
+   ```
+
+3. **After fixing permissions, restart the service:**
+   ```bash
+   sudo systemctl restart wiifitboardbit
+   ```
+
+4. **Re-authorize ONE MORE TIME:**
+   - Visit `http://YOUR_PI_IP:8080/`
+   - Complete authorization
+   - Check that `fitbit_sync/auth_data/user_1.json` was created
+   - Restart and verify it persists
+
+**Prevention:** The auth_data directory is now gitignored and created automatically. If you're still having issues, the systemd service might be running with conflicting permissions.
+
+---
+
 ## Systemd Service Issues
 
 ### Service fails to start

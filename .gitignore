@@ -166,6 +166,9 @@ fitbit_sync/key.pem
 # Fitbit OAuth credentials (personal, should not be committed)
 fitbit_credentials.py
 
+# Fitbit OAuth tokens (personal, contains access tokens)
+fitbit_sync/auth_data/
+
 # Personal data files (weight logs, application logs)
 data/weight.csv
 log.txt
