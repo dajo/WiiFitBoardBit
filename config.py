@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # =============================================== FitBit Synchronization ===============================================
 # Change to True to enable weight synchronization with FitBit. Go to http://localhost:8080/ for more info.
 
